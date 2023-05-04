@@ -1,0 +1,24 @@
+:root {
+  --border-color: #ffcc00;
+  --dialog-background: #ffffff;
+  --menu-background: #ffffff;
+  --menu-border-color: #000000;
+  --menu-font-color: #000000;
+  --menu-selected-background: #ffcc00;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  --border-color: #ffcc00;
+  --dialog-background: #ffffff;
+  --menu-background: #ffffff;
+  --menu-border-color: #000000;
+  --menu-font-color: #000000;
+  --menu-selected-background: #ffcc00;
+}
