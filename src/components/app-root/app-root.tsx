@@ -1,4 +1,5 @@
-import { Component, ComponentInterface, h } from '@stencil/core';
+import { Component, ComponentInterface, h, State } from '@stencil/core';
+import { SPRITE_SHEET_SRC } from '../../helpers/consts';
 
 @Component({
   tag: 'app-root',
@@ -7,11 +8,23 @@ import { Component, ComponentInterface, h } from '@stencil/core';
 })
 export class AppRoot implements ComponentInterface {
 
-  async componentDidLoad() {
+  @State() image: CanvasImageSource;
 
+  async componentDidLoad() {
+    this.image = await new Promise(resolve => {
+      const image = new Image();
+      image.src = SPRITE_SHEET_SRC;
+      image.onload = () => {
+       resolve(image);
+      };
+    });
   }
 
   render() {
-    return (<div/>);
+    return [
+      <render-sprite image={this.image} frameCoord={"1x0"} />,
+      <render-sprite image={this.image} frameCoord={"0x2"}/>,
+      <render-sprite image={this.image} frameCoord={"0x3"}/>
+    ];
   }
 }

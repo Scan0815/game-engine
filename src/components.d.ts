@@ -8,6 +8,11 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AppRoot {
     }
+    interface RenderSprite {
+        "frameCoord": string;
+        "image": CanvasImageSource;
+        "size": number;
+    }
 }
 declare global {
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
@@ -16,15 +21,28 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLRenderSpriteElement extends Components.RenderSprite, HTMLStencilElement {
+    }
+    var HTMLRenderSpriteElement: {
+        prototype: HTMLRenderSpriteElement;
+        new (): HTMLRenderSpriteElement;
+    };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
+        "render-sprite": HTMLRenderSpriteElement;
     }
 }
 declare namespace LocalJSX {
     interface AppRoot {
     }
+    interface RenderSprite {
+        "frameCoord"?: string;
+        "image"?: CanvasImageSource;
+        "size"?: number;
+    }
     interface IntrinsicElements {
         "app-root": AppRoot;
+        "render-sprite": RenderSprite;
     }
 }
 export { LocalJSX as JSX };
@@ -32,6 +50,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "render-sprite": LocalJSX.RenderSprite & JSXBase.HTMLAttributes<HTMLRenderSpriteElement>;
         }
     }
 }
