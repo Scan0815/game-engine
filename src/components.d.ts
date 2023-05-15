@@ -5,13 +5,34 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Scene } from "./classes/Scene";
+import { IScene } from "./interfaces/Scene";
+import { TLayer } from "./interfaces/TileMapLayer";
+export { Scene } from "./classes/Scene";
+export { IScene } from "./interfaces/Scene";
+export { TLayer } from "./interfaces/TileMapLayer";
 export namespace Components {
     interface AppRoot {
     }
-    interface RenderSprite {
-        "frameCoord": string;
+    interface RenderGameObjectLayer {
         "image": CanvasImageSource;
-        "size": number;
+        "scene": Scene;
+    }
+    interface RenderHero {
+        "tileSetX": number;
+        "tileSetY": number;
+    }
+    interface RenderLayer {
+        "image": CanvasImageSource;
+        "layer": TLayer;
+        "scene": IScene;
+    }
+    interface RenderScene {
+    }
+    interface RenderSprite {
+        "cellSize": number;
+        "tileSetX": number;
+        "tileSetY": number;
     }
 }
 declare global {
@@ -21,6 +42,30 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLRenderGameObjectLayerElement extends Components.RenderGameObjectLayer, HTMLStencilElement {
+    }
+    var HTMLRenderGameObjectLayerElement: {
+        prototype: HTMLRenderGameObjectLayerElement;
+        new (): HTMLRenderGameObjectLayerElement;
+    };
+    interface HTMLRenderHeroElement extends Components.RenderHero, HTMLStencilElement {
+    }
+    var HTMLRenderHeroElement: {
+        prototype: HTMLRenderHeroElement;
+        new (): HTMLRenderHeroElement;
+    };
+    interface HTMLRenderLayerElement extends Components.RenderLayer, HTMLStencilElement {
+    }
+    var HTMLRenderLayerElement: {
+        prototype: HTMLRenderLayerElement;
+        new (): HTMLRenderLayerElement;
+    };
+    interface HTMLRenderSceneElement extends Components.RenderScene, HTMLStencilElement {
+    }
+    var HTMLRenderSceneElement: {
+        prototype: HTMLRenderSceneElement;
+        new (): HTMLRenderSceneElement;
+    };
     interface HTMLRenderSpriteElement extends Components.RenderSprite, HTMLStencilElement {
     }
     var HTMLRenderSpriteElement: {
@@ -29,19 +74,42 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
+        "render-game-object-layer": HTMLRenderGameObjectLayerElement;
+        "render-hero": HTMLRenderHeroElement;
+        "render-layer": HTMLRenderLayerElement;
+        "render-scene": HTMLRenderSceneElement;
         "render-sprite": HTMLRenderSpriteElement;
     }
 }
 declare namespace LocalJSX {
     interface AppRoot {
     }
-    interface RenderSprite {
-        "frameCoord"?: string;
+    interface RenderGameObjectLayer {
         "image"?: CanvasImageSource;
-        "size"?: number;
+        "scene"?: Scene;
+    }
+    interface RenderHero {
+        "tileSetX"?: number;
+        "tileSetY"?: number;
+    }
+    interface RenderLayer {
+        "image"?: CanvasImageSource;
+        "layer"?: TLayer;
+        "scene"?: IScene;
+    }
+    interface RenderScene {
+    }
+    interface RenderSprite {
+        "cellSize"?: number;
+        "tileSetX"?: number;
+        "tileSetY"?: number;
     }
     interface IntrinsicElements {
         "app-root": AppRoot;
+        "render-game-object-layer": RenderGameObjectLayer;
+        "render-hero": RenderHero;
+        "render-layer": RenderLayer;
+        "render-scene": RenderScene;
         "render-sprite": RenderSprite;
     }
 }
@@ -50,6 +118,10 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "render-game-object-layer": LocalJSX.RenderGameObjectLayer & JSXBase.HTMLAttributes<HTMLRenderGameObjectLayerElement>;
+            "render-hero": LocalJSX.RenderHero & JSXBase.HTMLAttributes<HTMLRenderHeroElement>;
+            "render-layer": LocalJSX.RenderLayer & JSXBase.HTMLAttributes<HTMLRenderLayerElement>;
+            "render-scene": LocalJSX.RenderScene & JSXBase.HTMLAttributes<HTMLRenderSceneElement>;
             "render-sprite": LocalJSX.RenderSprite & JSXBase.HTMLAttributes<HTMLRenderSpriteElement>;
         }
     }

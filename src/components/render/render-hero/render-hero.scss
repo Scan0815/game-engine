@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  position: relative;
+
+  render-sprite{
+    &.hero{
+      position: absolute;
+      left: -9px;
+      top: -16px;
+    }
+  }
+}
