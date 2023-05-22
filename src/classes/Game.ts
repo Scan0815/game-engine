@@ -12,9 +12,9 @@ export class Game implements IGame {
   onEmit: Function;
   gameObjects: ITileMapItem[];
   sceneIndex: number;
-  activeScene: IScene;
+  activeScene: Scene;
 
-  constructor(sceneIndex, onEmit = (_activeScene:IScene) => {}) {
+  constructor(sceneIndex, onEmit = (_activeScene:Scene) => {}) {
     this.sceneIndex = sceneIndex;
     this.onEmit = onEmit;
   }
@@ -31,8 +31,18 @@ export class Game implements IGame {
     SpriteSheetImageAtom.set(this.spriteSheetImage);
     this.scenes = game.scenes;
     this.tileSet = game.tileSet;
-    this.activeScene = new Scene(this.scenes[this.sceneIndex], this.onEmit);
+    this.activeScene = this.goToScene(this.sceneIndex);
   }
+
+  goToScene(sceneIndex){
+    this.sceneIndex = sceneIndex;
+    if(this.sceneIndex > this.scenes.length){
+      this.sceneIndex = 0;
+    }
+    console.log(this.scenes[this.sceneIndex]);
+    return this.activeScene = new Scene(this.scenes[this.sceneIndex], this.onEmit);
+  }
+
 
   destroy(){
   }

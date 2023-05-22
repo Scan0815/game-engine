@@ -3,24 +3,30 @@ import { ITileMapItem } from '../interfaces/TileMapLayer';
 import { HeroGameObject } from '../gameObjects/HeroGameObject';
 import { GoalGameObject } from '../gameObjects/GoalGameObject';
 import { KeyGameObject } from '../gameObjects/KeyGameObject';
+import { DiamondGameObject } from '../gameObjects/DiamondGameObject';
+import { ParticleGameObject } from '../gameObjects/ParticleGameObject';
+import { DoorGameObject } from '../gameObjects/DoorGameObject';
 export class GameObjectFactory {
   createGameObject(config: ITileMapItem, scene: IScene) {
-    const instance = this.getInstance(config, scene);
-    return instance;
+    return this.getInstance(config, scene);
+  }
+
+  private gameObjectTypeClassMap = {
+    "hero" : HeroGameObject,
+    "goal" : GoalGameObject,
+    "key" : KeyGameObject,
+    "diamond" : DiamondGameObject,
+    "door": DoorGameObject,
+    "particle" : ParticleGameObject,
   }
 
   getInstance(config, scene) {
-    switch (config.type) {
-      case "hero":
-        return new HeroGameObject(config, scene);
-      case "goal":
-        return new GoalGameObject(config, scene);
-      case "key":
-        return new KeyGameObject(config, scene);
-      default:
-        console.warn("NO TYPE FOUND", config.type);
-        return null;
+    const gameObjectClass = this.gameObjectTypeClassMap[config.type];
+    if (!gameObjectClass) {
+      console.warn("NO TYPE FOUND", config.type);
+      return null;
     }
+    return new gameObjectClass(config, scene)
   }
 
 }

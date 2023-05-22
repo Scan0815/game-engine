@@ -1,10 +1,11 @@
-import { Component, Host, h, Prop, ComponentInterface } from '@stencil/core';
+import { Component, Host, h, Prop, ComponentInterface, Method } from '@stencil/core';
 import { gameObjectFactory } from '../../../classes/GameObjectFactory';
 import { GameObject } from '../../../gameObjects/gameObject';
 import { GameLoop } from '../../../classes/GameLoop';
 import { Scene } from '../../../classes/Scene';
 import { DirectionControls } from '../../../classes/DirectionControls';
 import { HeroGameObject } from '../../../gameObjects/HeroGameObject';
+import { CompleteSceneAtom } from '../../../atom/completeScene';
 
 @Component({
   tag: 'render-game-object-layer',
@@ -12,16 +13,29 @@ import { HeroGameObject } from '../../../gameObjects/HeroGameObject';
   shadow: true,
 })
 export class RenderGameObjectLayer implements ComponentInterface{
-
   @Prop() image: CanvasImageSource;
-  @Prop() scene: Scene;
-
+  @Prop({mutable:true}) scene: Scene;
   private gameLoop;
   private directionControls = new DirectionControls();
   private heroRef: HeroGameObject;
 
 
-  componentWillLoad() {
+  async componentWillLoad() {
+    await this.startScene();
+    CompleteSceneAtom.get().subscribe(completed => {
+      if(completed){
+        this.gameLoop.stop();
+        this.scene.isCompleted = true;
+        CompleteSceneAtom.set(false);
+      }
+    })
+  }
+
+  @Method()
+  async startScene(scene = null){
+    if(scene) {
+      this.scene = scene;
+    }
     this.scene.gameObjects = this.scene.layers.layers.gameObjects
       .map(gameObject => gameObjectFactory.createGameObject(gameObject,this.scene))
       .filter(n => n);
@@ -37,18 +51,16 @@ export class RenderGameObjectLayer implements ComponentInterface{
   }
 
   tick() {
-
     if (this.directionControls.direction) {
       this.heroRef.controllerMoveRequested(this.directionControls.direction);
     }
-
     // Call 'tick' on any Placement that wants to update
-    this.scene.gameObjects.forEach((gameObject) => {
+    this.scene?.gameObjects?.filter(gameObject => !gameObject.hasBeenCollected)
+      .forEach((gameObject) => {
       gameObject.update();
     });
     this.scene.onEmit(this.scene);
   }
-
 
   disconnectedCallback() {
     this.gameLoop?.stop();
@@ -61,15 +73,20 @@ export class RenderGameObjectLayer implements ComponentInterface{
     }
     const Tag = gameObject.renderComponent();
     const [x,y] = gameObject.displayXY();
+    const yTranslate = gameObject?.getYTranslate()
     const style = {
       position: 'absolute',
+      zIndex: gameObject?.zIndex().toString(),
       height: this.scene.layers.cellSize + 'px',
       width: this.scene.layers.cellSize + 'px',
       transform: `translate3d(${x}px, ${y}px, 0)`,
     };
-
-    return (<div style={style}>
-      {<Tag tileSetX={gameObject.tileSetX} tileSetY={gameObject.tileSetY} cellSize={this.scene.layers.cellSize}/>}
+    return (<div style={style} id={gameObject.id}>
+      {<Tag
+        yTranslate={yTranslate}
+        tileSetX={gameObject.tileSetX}
+        tileSetY={gameObject.tileSetY}
+        cellSize={this.scene.layers.cellSize}/>}
     </div>);
   }
   render() {
@@ -79,7 +96,9 @@ export class RenderGameObjectLayer implements ComponentInterface{
           width:(this.scene.layers.cols * this.scene.layers.cellSize)+"px",
           height:(this.scene.layers.cols * this.scene.layers.cellSize)+"px"
         }}>
-        {this.scene.gameObjects.map(gameObject => this.renderSprite(gameObject))}
+        {this.scene.gameObjects?.filter(gameObject => !gameObject.hasBeenCollected)
+          .map(gameObject => this.renderSprite(gameObject))
+        }
       </Host>
     );
   }

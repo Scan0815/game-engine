@@ -1,5 +1,5 @@
 import { GameObject } from './gameObject';
-export class KeyGameObject extends GameObject {
+export class DiamondGameObject extends GameObject {
 
   isSolid(_gameObject): boolean {
     return false

@@ -1,4 +1,4 @@
-import { Component, h, ComponentInterface, Prop, Host, State } from '@stencil/core';
+import { Component, h, ComponentInterface, Prop, State, Watch } from '@stencil/core';
 import { SpriteSheetImageAtom } from '../../../atom/spriteSheetImage';
 
 @Component({
@@ -12,9 +12,17 @@ export class RenderSprite implements ComponentInterface {
   @Prop() tileSetY : number;
   @Prop() cellSize: number = 16;
   @State() image: CanvasImageSource;
-
   private canvasEl: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+
+  @Watch("tileSetX")
+  @Watch("tileSetY")
+  changeTileSet(oldValue,newValue){
+    if(oldValue !== newValue) {
+      this.renderImage();
+    }
+  }
+
 
   componentWillLoad() {
     SpriteSheetImageAtom.get().subscribe(image => {
@@ -45,15 +53,8 @@ export class RenderSprite implements ComponentInterface {
     );
   }
 
-  componentWillRender() {
-  console.log("render-sprite",this.tileSetX,this.tileSetY)
-    this.renderImage();
-  }
-
   render() {
-    return (<Host>
-      <canvas width={this.cellSize} height={this.cellSize} ref={ref => this.canvasEl = ref}/>
-    </Host>);
+    return (<canvas width={this.cellSize} height={this.cellSize} ref={ref => this.canvasEl = ref}/>);
   }
 
 }

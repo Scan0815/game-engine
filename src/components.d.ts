@@ -5,22 +5,36 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Scene } from "./classes/Scene";
 import { IScene } from "./interfaces/Scene";
+import { Scene } from "./classes/Scene";
+import { HeroGameObject } from "./gameObjects/HeroGameObject";
 import { TLayer } from "./interfaces/TileMapLayer";
-export { Scene } from "./classes/Scene";
 export { IScene } from "./interfaces/Scene";
+export { Scene } from "./classes/Scene";
+export { HeroGameObject } from "./gameObjects/HeroGameObject";
 export { TLayer } from "./interfaces/TileMapLayer";
 export namespace Components {
     interface AppRoot {
     }
+    interface HudDiamondCount {
+        "scene": IScene;
+    }
+    interface HudLevelCompleteMessage {
+    }
+    interface RenderElevatedSprite {
+        "tileSetX": number;
+        "tileSetY": number;
+        "yTranslate": number;
+    }
     interface RenderGameObjectLayer {
         "image": CanvasImageSource;
         "scene": Scene;
+        "startScene": (scene?: any) => Promise<void>;
     }
     interface RenderHero {
         "tileSetX": number;
         "tileSetY": number;
+        "yTranslate": number;
     }
     interface RenderLayer {
         "image": CanvasImageSource;
@@ -41,6 +55,24 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLHudDiamondCountElement extends Components.HudDiamondCount, HTMLStencilElement {
+    }
+    var HTMLHudDiamondCountElement: {
+        prototype: HTMLHudDiamondCountElement;
+        new (): HTMLHudDiamondCountElement;
+    };
+    interface HTMLHudLevelCompleteMessageElement extends Components.HudLevelCompleteMessage, HTMLStencilElement {
+    }
+    var HTMLHudLevelCompleteMessageElement: {
+        prototype: HTMLHudLevelCompleteMessageElement;
+        new (): HTMLHudLevelCompleteMessageElement;
+    };
+    interface HTMLRenderElevatedSpriteElement extends Components.RenderElevatedSprite, HTMLStencilElement {
+    }
+    var HTMLRenderElevatedSpriteElement: {
+        prototype: HTMLRenderElevatedSpriteElement;
+        new (): HTMLRenderElevatedSpriteElement;
     };
     interface HTMLRenderGameObjectLayerElement extends Components.RenderGameObjectLayer, HTMLStencilElement {
     }
@@ -74,6 +106,9 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
+        "hud-diamond-count": HTMLHudDiamondCountElement;
+        "hud-level-complete-message": HTMLHudLevelCompleteMessageElement;
+        "render-elevated-sprite": HTMLRenderElevatedSpriteElement;
         "render-game-object-layer": HTMLRenderGameObjectLayerElement;
         "render-hero": HTMLRenderHeroElement;
         "render-layer": HTMLRenderLayerElement;
@@ -84,6 +119,16 @@ declare global {
 declare namespace LocalJSX {
     interface AppRoot {
     }
+    interface HudDiamondCount {
+        "scene"?: IScene;
+    }
+    interface HudLevelCompleteMessage {
+    }
+    interface RenderElevatedSprite {
+        "tileSetX"?: number;
+        "tileSetY"?: number;
+        "yTranslate"?: number;
+    }
     interface RenderGameObjectLayer {
         "image"?: CanvasImageSource;
         "scene"?: Scene;
@@ -91,6 +136,7 @@ declare namespace LocalJSX {
     interface RenderHero {
         "tileSetX"?: number;
         "tileSetY"?: number;
+        "yTranslate"?: number;
     }
     interface RenderLayer {
         "image"?: CanvasImageSource;
@@ -106,6 +152,9 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "app-root": AppRoot;
+        "hud-diamond-count": HudDiamondCount;
+        "hud-level-complete-message": HudLevelCompleteMessage;
+        "render-elevated-sprite": RenderElevatedSprite;
         "render-game-object-layer": RenderGameObjectLayer;
         "render-hero": RenderHero;
         "render-layer": RenderLayer;
@@ -118,6 +167,9 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "hud-diamond-count": LocalJSX.HudDiamondCount & JSXBase.HTMLAttributes<HTMLHudDiamondCountElement>;
+            "hud-level-complete-message": LocalJSX.HudLevelCompleteMessage & JSXBase.HTMLAttributes<HTMLHudLevelCompleteMessageElement>;
+            "render-elevated-sprite": LocalJSX.RenderElevatedSprite & JSXBase.HTMLAttributes<HTMLRenderElevatedSpriteElement>;
             "render-game-object-layer": LocalJSX.RenderGameObjectLayer & JSXBase.HTMLAttributes<HTMLRenderGameObjectLayerElement>;
             "render-hero": LocalJSX.RenderHero & JSXBase.HTMLAttributes<HTMLRenderHeroElement>;
             "render-layer": LocalJSX.RenderLayer & JSXBase.HTMLAttributes<HTMLRenderLayerElement>;

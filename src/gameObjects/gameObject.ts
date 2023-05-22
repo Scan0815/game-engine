@@ -1,5 +1,6 @@
 import { IScene } from '../interfaces/Scene';
 import { DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP } from '../helpers/consts';
+import { Guid } from '../helpers/guid';
 
 export class GameObject {
   x: number;
@@ -19,9 +20,11 @@ export class GameObject {
   movingPixelDirection = DIRECTION_RIGHT;
   spriteFacingDirection = DIRECTION_RIGHT;
   spriteWalkFrame = 0;
+  hasBeenCollected = false;
   constructor(properties: any, scene:IScene) {
     this.x = properties.x;
     this.y = properties.y;
+    this.id = properties?.id || Guid();
     this.name = properties.name;
     this.tags = properties.tags;
     this.tileSetX = properties.tileSetX;
@@ -39,10 +42,6 @@ export class GameObject {
     return [x, y];
   }
 
-  getTileSetPosition(){
-    return [this.tileSetX,this.tileSetY];
-  }
-
   displayMovingXY(){
     const x = this.x * this.scene.layers.cellSize;
     const y = this.y * this.scene.layers.cellSize;
@@ -58,21 +57,47 @@ export class GameObject {
       default:
         return [x,y + progressPixels];
     }
+  }
 
+  isSolid(_gameObject) {
+    return false;
+  }
 
+  zIndex() {
+    return 1;
   }
 
   renderComponent() {
     return null;
   }
 
+  addsItemToInventoryOnCollide() {
+    return null;
+  }
+
+  canBeUnlocked() {
+    return false;
+  }
+
+  getYTranslate() {
+    return null
+  }
+
+  collect() {
+    this.hasBeenCollected = true;
+    this.scene.inventory.add(this.addsItemToInventoryOnCollide());
+  }
 
   update() {
     return null;
   }
 
+  completesLevelOnCollide() {
+    return false;
+  }
+
   destroy() {
-    return null;
+    this.scene.deleteGameObject(this);
   }
 
 }

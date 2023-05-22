@@ -15,14 +15,13 @@ export class RenderLayer {
   private ctx: CanvasRenderingContext2D;
   componentDidLoad() {
     this.ctx = this.canvasEl.getContext("2d");
-    this.renderImage();
   }
 
   renderImage(){
-    this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    this.ctx?.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
     //Draw a graphic to the canvas tag
-    this.scene.layers.layers[this.layer].map(item => {
-      this.ctx.drawImage(
+    this.scene?.layers?.layers[this.layer]?.map(item => {
+      this.ctx?.drawImage(
         this.image, // Image to pull from
         item.tileSetX * this.scene.layers.cellSize,
         item.tileSetY * this.scene.layers.cellSize,
@@ -37,6 +36,7 @@ export class RenderLayer {
   }
 
   render() {
+    this.renderImage();
     return (
       <Host
         style={{
